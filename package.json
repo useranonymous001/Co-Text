@@ -1,0 +1,11 @@
+{
+  "name": "co-text",
+  "version": "1.0.0",
+  "description": "a real time text edit collaboration ",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "lazinerd",
+  "license": "ISC"
+}
