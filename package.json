@@ -10,8 +10,11 @@
   "author": "lazinerd",
   "license": "ISC",
   "dependencies": {
+    "config": "^3.3.12",
+    "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "mongoose": "^8.8.3",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "socket.io": "^4.8.1"
   }
 }
