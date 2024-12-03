@@ -3,78 +3,236 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CoText</title>
+  <title>CoText - Collaborative Text Editor</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-      padding: 0;
-      background-color: #f4f4f9;
-    }
-
-    #editor-container {
-      margin: 0 auto;
-      width: 80%;
-      max-width: 800px;
-    }
-
-    textarea {
-      width: 100%;
-      height: 400px;
-      font-size: 16px;
-      padding: 10px;
-      box-sizing: border-box;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      resize: none;
-      background: #fff;
-    }
-
-    p {
-      text-align: center;
-      color: #777;
-    }
-
-    .user-typing-box {
-    width: 100%; /* Adjust as needed */
-    height: 30px; /* Fixed height to prevent resizing */
-    display: flex; /* Ensures proper alignment of text */
-    align-items: center; /* Vertically centers the text */
-    justify-content: end; /* Aligns text to the left */
-   /* Optional border */
-     /* Subtle background color */
-    padding: 5px;
-    box-sizing: border-box; /* Ensures padding doesn’t increase size */
-    overflow: hidden; /* Ensures overflow text doesn’t cause layout shift */
+@layer utilities {
+  .company {
+    text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #000000, 0 0 30px #000000, 0 0 40px #050404, 0 0 50px #000000, 0 0 60px #000000;
   }
 
-  .user-typing {
-    font-size: 12px; /* Adjust text size */
-    color: #555; /* Text color */
-    white-space: nowrap; /* Prevents text wrapping */
-    overflow: hidden; /* Hides overflowing text */
-    text-overflow: ellipsis; /* Adds ellipsis if text overflows */
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-  }
+  /* .glow:hover {
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #ff00ff, 0 0 40px #ff00ff, 0 0 50px #ff00ff, 0 0 60px #ff00ff, 0 0 70px #ff00ff;
+  } */
+}
 
+    *{
+      font-family: Verdana, Geneva, Tahoma, sans-serif;
+    }
+
+
+    /* Glowing effect for interactive elements */
+    /* .glow:hover {
+      box-shadow: 0 0 15px rgba(59, 130, 246, 0.8);
+    } */
+
+    /* Custom scrollbar for textarea */
+    textarea::-webkit-scrollbar {
+      width: 8px;
+    }
+    textarea::-webkit-scrollbar-thumb {
+      background: #3b82f6; /* Glowing blue */
+      border-radius: 10px;
+    }
+    textarea::-webkit-scrollbar-thumb:hover {
+      background: #60a5fa; /* Lighter blue */
+    }
   </style>
 </head>
-<body>
+<body class="bg-navy-900 text-gray-200 font-sans">
 
-
-  <div id="editor-container">
-    <h1>CoText: Collaborative Text Editor</h1>
-      <div class="user-typing-box">
-        <p id="typing" class="user-typing"></p>
-      </div>
-    <div>
-      <textarea id="text-area" placeholder="Start typing here..."></textarea>
+  <!-- Navbar -->
+  <nav class="bg-navy-800 shadow-lg">
+    <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+      <a href="#" class="text-3xl font-bold text-gray-800 glow">CoText</a>
+      <ul class="flex space-x-6">
+        <li><a href="#features" class="text-gray-500 hover:text-blue-900">Features</a></li>
+        <li><a href="#pricing" class="text-gray-500 hover:text-blue-900">Pricing</a></li>
+        <li><a href="#contact" class="text-gray-500 hover:text-blue-900">Contact</a></li>
+        <li>
+          <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded glow transition duration-300 ease-in-out">
+            Sign Up
+          </button>
+        </li>
+      </ul>
     </div>
-    <p>Multiple users can edit this text in real-time.</p>
-  </div>
+  </nav>
 
-  <!-- Socket.IO Client -->
-  <script src="/socket.io/socket.io.js"></script>
-  <script type="module" src="./js/client.js"></script>
-</body>
-</html>
+  <!-- Hero Section -->
+  <header class="container mx-auto px-6 py-16 text-center">
+    <h1 class="text-5xl font-extrabold mb-4 text-gray-800 ">
+      <span class="text-white hover:text-gray-900 glow company transition duration-300 ease-in-out">CoText</span>: Collaborative Text Editor
+    </h1>
+    <p class="text-lg text-gray-900">
+      Collaborate in real-time with powerful editing tools. Work smarter, together.
+    </p>
+    <a href="#editor" class="mt-8 inline-block bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg text-lg glow">
+      Get Started
+    </a>
+  </header>
+
+  <!-- Features Section -->
+  <section id="features" class="bg-navy-800 py-16">
+    <div class="container mx-auto px-6">
+      <h2 class="text-4xl font-bold text-gray-800 text-center mb-12 glow">Features</h2>
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="bg-navy-700 p-8 rounded-lg shadow-xl text-center transform hover:-translate-y-2 transition duration-300">
+          <h3 class="text-2xl font-bold text-blue-900 mb-4">Real-Time Collaboration</h3>
+          <p class="text-gray-900">Edit documents simultaneously with your team, with updates in real-time.</p>
+        </div>
+        <div class="bg-navy-700 p-8 rounded-lg shadow-xl text-center transform hover:-translate-y-2 transition duration-300">
+          <h3 class="text-2xl font-bold text-blue-900 mb-4">Conflict Resolution</h3>
+          <p class="text-gray-900">Handle changes smoothly with manual conflict resolution and history tracking.</p>
+        </div>
+        <div class="bg-navy-700 p-8 rounded-lg shadow-xl text-center transform hover:-translate-y-2 transition duration-300">
+          <h3 class="text-2xl font-bold text-blue-900 mb-4">Secure and Reliable</h3>
+          <p class="text-gray-900">Built with security in mind, ensuring your data is safe and accessible.</p>
+        </div>
+        <div class="bg-navy-700 p-8 rounded-lg shadow-xl text-center transform hover:-translate-y-2 transition duration-300">
+          <h3 class="text-2xl font-bold text-blue-900 mb-4">Version Control</h3>
+          <p class="text-gray-900">Track changes over time and revert to previous versions if needed.</p>
+        </div>
+        <div class="bg-navy-700 p-8 rounded-lg shadow-xl text-center transform hover:-translate-y-2 transition duration-300">
+          <h3 class="text-2xl font-bold text-blue-900 mb-4">Offline Mode</h3>
+          <p class="text-gray-900">Continue working even without an internet connection, with seamless syncing.</p>
+        </div>
+        <div class="bg-navy-700 p-8 rounded-lg shadow-xl text-center transform hover:-translate-y-2 transition duration-300">
+          <h3 class="text-2xl font-bold text-blue-900 mb-4">Custom Themes</h3>
+          <p class="text-gray-900">Personalize your editor with customizable themes and layouts.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Text Editor Section -->
+  <section id="editor" class="py-16">
+    <div class="container mx-auto px-6">
+      <div id="editor-container" class="editor-box bg-navy-800 p-8 rounded-lg shadow-2xl">
+        <h1 class="editor-title text-gray-800 text-3xl font-bold mb-6">
+          CoText: Collaborative Text Editor
+        </h1>
+
+        <div class="user-typing-box bg-navy-700 text-gray-900 p-4 rounded mb-6">
+          <p id="typing" class="user-typing"></p>
+        </div>
+
+        <div class="text-area-container mb-6">
+          <textarea id="text-area" placeholder="Start typing here..." class="w-full h-64 bg-navy-700 text-gray-900 p-4 rounded"></textarea>
+        </div>
+
+        <div class="form-container">
+          <form action="" class="join-room-form flex items-center gap-4">
+            <label for="room" class="text-gray-900 font-semibold">Room:</label>
+            <input
+              type="text"
+              maxlength="4"
+              minlength="4"
+              id="room"
+              placeholder="Enter Room Code"
+              class="flex-1 p-2 rounded bg-navy-700 text-gray-900 border border-blue-400"
+            />
+            <button type="submit" id="join-button" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded glow">
+              Join
+            </button>
+          </form>
+        </div>
+
+        <p class="footer-text text-gray-400 mt-6">
+          Multiple users can edit this text in real-time.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing Section -->
+  <section id="pricing" class="bg-navy-800 py-16">
+    <div class="container mx-auto px-6">
+      <h2 class="text-4xl font-bold text-gray-800 text-center mb-12 glow">Pricing</h2>
+      <div class="grid md:grid-cols-3 gap-8">
+        <!-- Basic Plan -->
+        <div class="bg-navy-700 p-8 rounded-lg shadow-xl text-center transform hover:-translate-y-2 transition duration-300">
+          <h3 class="text-2xl font-bold text-blue-900 mb-4">Basic</h3>
+          <p class="text-4xl font-extrabold text-gray-700 mb-4">Free</p>
+          <p class="text-gray-900 mb-6">Perfect for personal use or small teams.</p>
+          <ul class="text-gray-900 space-y-2 mb-6">
+            <li>5 Room</li>
+            <li>Basic Features</li>
+            <li>Community Support</li>
+          </ul>
+          <button class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded glow">Get Started</button>
+        </div>
+        <!-- Pro Plan -->
+        <div class="bg-navy-700 p-8 rounded-lg shadow-xl text-center transform hover:-translate-y-2 transition duration-300">
+          <h3 class="text-2xl font-bold text-blue-900 mb-4">
+
+            <h3 class="text-2xl font-bold text-blue-900 mb-4">Pro</h3>
+            <p class="text-4xl font-extrabold text-gray-700 mb-4">$19<span class="text-lg font-medium">/month</span></p>
+            <p class="text-gray-900 mb-6">Great for growing teams and advanced features.</p>
+            <ul class="text-gray-900 space-y-2 mb-6">
+              <li>20 Rooms</li>
+              <li>Advanced Features</li>
+              <li>Email Support</li>
+              <li>Access to Beta Features</li>
+            </ul>
+            <button class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded glow">Upgrade Now</button>
+          </div>
+          <!-- Enterprise Plan -->
+          <div class="bg-navy-700 p-8 rounded-lg shadow-xl text-center transform hover:-translate-y-2 transition duration-300">
+            <h3 class="text-2xl font-bold text-blue-900 mb-4">Enterprise</h3>
+            <p class="text-4xl font-extrabold text-gray-700 mb-4">Custom</p>
+            <p class="text-gray-900 mb-6">Tailored solutions for your organization's needs.</p>
+            <ul class="text-gray-900 space-y-2 mb-6">
+              <li>Unlimited Rooms</li>
+              <li>All Features</li>
+              <li>Priority Support</li>
+              <li>Dedicated Account Manager</li>
+            </ul>
+            <button class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded glow">Contact Sales</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  
+    <!-- Contact Section -->
+    <section id="contact" class="bg-navy-900 py-16">
+      <div class="container mx-auto px-6 text-center">
+        <h2 class="text-4xl font-bold text-gray-800 mb-12 glow">Get in Touch</h2>
+        <p class="text-gray-900 mb-6">Have questions? Reach out to us!</p>
+        <form class="space-y-6 max-w-xl mx-auto">
+          <input
+            type="text"
+            placeholder="Your Name"
+            class="w-full p-3 rounded bg-navy-800 text-gray-900 border border-blue-400"
+          />
+          <input
+            type="email"
+            placeholder="Your Email"
+            class="w-full p-3 rounded bg-navy-800 text-gray-100 border border-blue-400"
+          />
+          <textarea
+            placeholder="Your Message"
+            class="w-full h-32 p-3 rounded bg-navy-800 text-gray-900 border border-blue-400"
+          ></textarea>
+          <button
+            type="submit"
+            class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded glow"
+          >
+            Send Message
+          </button>
+        </form>
+      </div>
+    </section>
+  
+    <!-- Footer -->
+    <footer class="bg-navy-800 py-6">
+      <div class="container mx-auto text-center text-gray-400">
+        <p>&copy; 2024 CoText. All rights reserved.</p>
+      </div>
+    </footer>
+  
+<script src="/socket.io/socket.io.js"></script>
+<script type="module" src="./js/client.js"></script>
+
+  </body>
+  </html>
+  

@@ -11,29 +11,29 @@ const io = new Server(server);
 let sharedText = "";
 
 io.on("connection", (socket) => {
-  socket.on("text-change", (text, callback) => {
+  socket.on("text-change", (text, roomID) => {
     sharedText = text;
-    socket.broadcast.emit("update-text", sharedText);
-    callback({
-      from: socket.id,
-      data: sharedText,
-      buffer: Buffer.from([6]),
-    });
+    socket.to(roomID).emit("update-text", sharedText);
   });
 
-  socket.on("initial-request", () => {
-    io.emit("load-recent-text", sharedText);
+  socket.on("initial-request", (roomID) => {
+    io.to(roomID).emit("load-recent-text", sharedText);
   });
 
   // user is typing indicator events
-  socket.on("typing", (data) => {
-    socket.broadcast.emit("userTyping", data);
+  socket.on("typing", (data, roomID) => {
+    socket.to(roomID).emit("userTyping", data);
   });
 
-  socket.on("stopTyping", (data) => {
-    socket.broadcast.emit("userStoppedTyping", "");
+  socket.on("stopTyping", (data, roomID) => {
+    socket.to(roomID).emit("userStoppedTyping", "");
     console.log("user stopped typing", data.user);
     // can do some more features later when the user stops typing...
+  });
+
+  // making the users connect to the certain room
+  socket.on("join-room", (room) => {
+    socket.join(room);
   });
 });
 
