@@ -1,21 +1,80 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>Socket.IO chat</title>
-    <style>
-      body { margin: 0; padding-bottom: 3rem; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-</style>
-  </head>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CoText</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      padding: 0;
+      background-color: #f4f4f9;
+    }
 
-  <body>
-    <ul id="messages"></ul>
-    <form id="form" action="">
-      <input id="input" autocomplete="off" /><button>Send</button>
-    </form>
+    #editor-container {
+      margin: 0 auto;
+      width: 80%;
+      max-width: 800px;
+    }
 
-        <!-- connection of socket client package to backend server -->
-        <script src="/socket.io/socket.io.js"></script>
-        <script src="./js/client.js"></script>
-  </body>
+    textarea {
+      width: 100%;
+      height: 400px;
+      font-size: 16px;
+      padding: 10px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      resize: none;
+      background: #fff;
+    }
+
+    p {
+      text-align: center;
+      color: #777;
+    }
+
+    .user-typing-box {
+    width: 100%; /* Adjust as needed */
+    height: 30px; /* Fixed height to prevent resizing */
+    display: flex; /* Ensures proper alignment of text */
+    align-items: center; /* Vertically centers the text */
+    justify-content: end; /* Aligns text to the left */
+   /* Optional border */
+     /* Subtle background color */
+    padding: 5px;
+    box-sizing: border-box; /* Ensures padding doesn’t increase size */
+    overflow: hidden; /* Ensures overflow text doesn’t cause layout shift */
+  }
+
+  .user-typing {
+    font-size: 12px; /* Adjust text size */
+    color: #555; /* Text color */
+    white-space: nowrap; /* Prevents text wrapping */
+    overflow: hidden; /* Hides overflowing text */
+    text-overflow: ellipsis; /* Adds ellipsis if text overflows */
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+  }
+
+  </style>
+</head>
+<body>
+
+
+  <div id="editor-container">
+    <h1>CoText: Collaborative Text Editor</h1>
+      <div class="user-typing-box">
+        <p id="typing" class="user-typing"></p>
+      </div>
+    <div>
+      <textarea id="text-area" placeholder="Start typing here..."></textarea>
+    </div>
+    <p>Multiple users can edit this text in real-time.</p>
+  </div>
+
+  <!-- Socket.IO Client -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script type="module" src="./js/client.js"></script>
+</body>
 </html>

@@ -1,18 +1,39 @@
-require("dotenv").config();
-const http = require("node:http");
-const app = require("./src/app.js");
+import dotenv from "dotenv";
+dotenv.config();
+import http from "node:http";
+import app from "./src/app.js";
 const server = http.createServer(app);
-const { Server } = require("socket.io");
+import { Server } from "socket.io";
+
 const io = new Server(server);
 
+// storing the shared text in the memory
+let sharedText = "";
+
 io.on("connection", (socket) => {
-  socket.on("chat", (msg, callback) => {
-    // socket.broadcast.emit("c hat", msg); // emits to everyone but not to itself
-    // io.emit("chat", msg, msg2, msg3); // server emits msg to everyone including oneself
-    // socket.emit("chat", msg); // send msg to myself only
-    // acknowledgements
-    console.log(msg);
-    callback("got it");
+  socket.on("text-change", (text, callback) => {
+    sharedText = text;
+    socket.broadcast.emit("update-text", sharedText);
+    callback({
+      from: socket.id,
+      data: sharedText,
+      buffer: Buffer.from([6]),
+    });
+  });
+
+  socket.on("initial-request", () => {
+    io.emit("load-recent-text", sharedText);
+  });
+
+  // user is typing indicator events
+  socket.on("typing", (data) => {
+    socket.broadcast.emit("userTyping", data);
+  });
+
+  socket.on("stopTyping", (data) => {
+    socket.broadcast.emit("userStoppedTyping", "");
+    console.log("user stopped typing", data.user);
+    // can do some more features later when the user stops typing...
   });
 });
 

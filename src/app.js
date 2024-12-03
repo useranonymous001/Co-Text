@@ -1,6 +1,6 @@
-const express = require("express");
+import express from "express";
 const app = express();
-const path = require("node:path");
+import path from "node:path";
 
 app.use(express.static("public"));
 
@@ -21,4 +21,4 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: "internal server error" });
 });
 
-module.exports = app;
+export default app;
