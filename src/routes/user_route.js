@@ -5,7 +5,7 @@ import {
   handleUserLogin,
   handleUserLogout,
   handleUserRegistration,
-} from "../controllers/userController";
+} from "../controllers/userController.js";
 
 router.post("/login", handleUserLogin);
 router.post("/register", handleUserRegistration);
