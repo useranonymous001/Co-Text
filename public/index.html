@@ -15,7 +15,6 @@
     text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #ff00ff, 0 0 40px #ff00ff, 0 0 50px #ff00ff, 0 0 60px #ff00ff, 0 0 70px #ff00ff;
   } */
 }
-
     *{
       font-family: Verdana, Geneva, Tahoma, sans-serif;
     }
@@ -112,28 +111,56 @@
           CoText: Collaborative Text Editor
         </h1>
 
-        <div class="user-typing-box bg-navy-700 text-gray-900 p-4 rounded mb-6">
-          <p id="typing" class="user-typing"></p>
-        </div>
+        <div class="user-typing-box bg-navy-700 text-gray-900 p-4 rounded mb-6 relative">
 
+          <p id="online-user" class="text-left text-sm absolute bottom-0 left-0 m-2"></p>
+          <p id="inside-room" class="text-center text-sm absolute bottom-0 left-40  m-2"></p>
+          <p id="typing" class="user-typing text-right text-sm absolute bottom-0 right-0 m-2"></p>
+        </div>
+      
         <div class="text-area-container mb-6">
           <textarea id="text-area" placeholder="Start typing here..." class="w-full h-64 bg-navy-700 text-gray-900 p-4 rounded"></textarea>
         </div>
 
         <div class="form-container">
-          <form action="" class="join-room-form flex items-center gap-4">
-            <label for="room" class="text-gray-900 font-semibold">Room:</label>
-            <input
-              type="text"
-              maxlength="4"
-              minlength="4"
-              id="room"
-              placeholder="Enter Room Code"
-              class="flex-1 p-2 rounded bg-navy-700 text-gray-900 border border-blue-400"
-            />
-            <button type="submit" id="join-button" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded glow">
-              Join
-            </button>
+          <form action="" class="join-room-form flex items-center gap-4   ">
+            <div class=" flex flex-wrap justify-between p-4 w-full">
+              <!-- First Half -->
+              <div class="w-full md:w-1/2 flex flex-row items-center gap-2">
+                <button
+                  id="gen-temp-room-id"
+                  class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded glow"
+                >
+                  Generate
+                </button>
+                <p id="room-id-placeholder"></p>
+
+              </div>
+            
+              <!-- Second Half -->
+              <div class="w-full md:w-1/2 flex flex-row items-center gap-2">
+                <label for="room" class="text-gray-900 font-semibold">
+                  Room:
+                </label>
+                <input
+                  type="text"
+                  maxlength="4"
+                  minlength="4"
+                  id="room"
+                  placeholder="Enter Room Code (only for loggedIn users - in development)"
+                  class="flex-2 p-2 rounded bg-navy-700 text-gray-900 border border-blue-400"
+                />
+                <button
+                  type="submit"
+                  id="join-button"
+                  class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded glow"
+                >
+                  Join
+                </button>
+              </div>
+            </div>
+            
+           
           </form>
         </div>
 
@@ -230,8 +257,12 @@
       </div>
     </footer>
   
+
 <script src="/socket.io/socket.io.js"></script>
+<script src="https://cdn.socket.io/4.7.0/socket.io.min.js"></script>
 <script type="module" src="./js/client.js"></script>
+<script type="module" src="./js/namespaces/default.js"></script>
+<script type="module" src="./js/namespaces/editor.js"></script>
 
   </body>
   </html>

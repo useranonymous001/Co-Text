@@ -5,37 +5,23 @@ import app from "./src/app.js";
 const server = http.createServer(app);
 import { Server } from "socket.io";
 
-const io = new Server(server);
+import connectDB from "./src/config/db_connection.js";
+connectDB();
 
-// storing the shared text in the memory
-let sharedText = "";
-
-io.on("connection", (socket) => {
-  socket.on("text-change", (text, roomID) => {
-    sharedText = text;
-    socket.to(roomID).emit("update-text", sharedText);
-  });
-
-  socket.on("initial-request", (roomID) => {
-    io.to(roomID).emit("load-recent-text", sharedText);
-  });
-
-  // user is typing indicator events
-  socket.on("typing", (data, roomID) => {
-    socket.to(roomID).emit("userTyping", data);
-  });
-
-  socket.on("stopTyping", (data, roomID) => {
-    socket.to(roomID).emit("userStoppedTyping", "");
-    console.log("user stopped typing", data.user);
-    // can do some more features later when the user stops typing...
-  });
-
-  // making the users connect to the certain room
-  socket.on("join-room", (room) => {
-    socket.join(room);
-  });
+const io = new Server(server, {
+  cors: {
+    origin: `${process.env.CORS_ORIGIN}:${process.env.PORT}`,
+    methods: ["GET", "POST"],
+  },
 });
+import { setUpDefaultNamespace } from "./src/sockets/defaultSocket.js";
+import { setUpEditorSockethandlers } from "./src/sockets/editorSockets.js";
+
+// for default namespace
+setUpDefaultNamespace(io);
+
+// for editor namespace (loggedIN)
+setUpEditorSockethandlers(io);
 
 // SERVER LISTENING AT PORT 9999
 const PORT = process.env.PORT || 9999;

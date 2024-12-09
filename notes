@@ -1,0 +1,57 @@
+# // fetching all the sockets of the main namespaces;
+# # returns the number of sockets in the main namespace
+# const numberOfSockets = await io.fetchSockets(); // returns the number of sockets in the main namespace
+
+# #  returns the number of sockets in certain room of main namespace
+# const numOfSocketsInRoom = await io.in("roomname").fetchSockets();
+
+# #  returns the number of sockets in certain romm of other namespace
+# const numOfSocketsInRoomOfNamespace = await io
+#   .of("/admin")
+#   .to("admin")
+#   .fetchSockets();
+
+
+# # TO-DO
+#   - Implement number of users joined in particular room
+#   - Admin Namespace 
+
+
+# # Namespaces 
+#   1) Default Namespace 
+#       - can join room and share texts   
+# 
+#   2) Editor   
+#       - logged in users
+#       - event handler
+#       - room
+#       - middlewares
+
+#   3) Admin --> TO-DO
+
+
+
+# ======================================================================================================
+
+
+# Logic:
+#   IF Not Logged In 
+#     => 2 users can join at a realtime + 3 rooms to create
+#   If Logged IN 
+#     => 7 users can join at the realtime + 5 rooms to create
+#   IF paid: 
+#     => more than 10 even with the basic plan + rooms according to plan
+
+# Classification Of models
+
+# Default Namespace:
+#   - Temporary Rooms 
+#   - Temporary Data
+
+# user_model
+#   - logged In users
+# editor_model
+#   - loggedIn + non-logged_in
+
+
+
