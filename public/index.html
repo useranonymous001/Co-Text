@@ -5,38 +5,39 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CoText - Collaborative Text Editor</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-@layer utilities {
-  .company {
-    text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #000000, 0 0 30px #000000, 0 0 40px #050404, 0 0 50px #000000, 0 0 60px #000000;
-  }
 
-  /* .glow:hover {
-    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #ff00ff, 0 0 40px #ff00ff, 0 0 50px #ff00ff, 0 0 60px #ff00ff, 0 0 70px #ff00ff;
-  } */
-}
-    *{
-      font-family: Verdana, Geneva, Tahoma, sans-serif;
+<style>
+  @layer utilities {
+    .company {
+      text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #000000, 0 0 30px #000000, 0 0 40px #050404, 0 0 50px #000000, 0 0 60px #000000;
     }
-
-
-    /* Glowing effect for interactive elements */
+  
     /* .glow:hover {
-      box-shadow: 0 0 15px rgba(59, 130, 246, 0.8);
+      text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #ff00ff, 0 0 40px #ff00ff, 0 0 50px #ff00ff, 0 0 60px #ff00ff, 0 0 70px #ff00ff;
     } */
-
-    /* Custom scrollbar for textarea */
-    textarea::-webkit-scrollbar {
-      width: 8px;
-    }
-    textarea::-webkit-scrollbar-thumb {
-      background: #3b82f6; /* Glowing blue */
-      border-radius: 10px;
-    }
-    textarea::-webkit-scrollbar-thumb:hover {
-      background: #60a5fa; /* Lighter blue */
-    }
-  </style>
+  }
+      *{
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+      }
+  
+  
+      /* Glowing effect for interactive elements */
+      /* .glow:hover {
+        box-shadow: 0 0 15px rgba(59, 130, 246, 0.8);
+      } */
+  
+      /* Custom scrollbar for textarea */
+      textarea::-webkit-scrollbar {
+        width: 8px;
+      }
+      textarea::-webkit-scrollbar-thumb {
+        background: #3b82f6; /* Glowing blue */
+        border-radius: 10px;
+      }
+      textarea::-webkit-scrollbar-thumb:hover {
+        background: #60a5fa; /* Lighter blue */
+      }
+    </style>
 </head>
 <body class="bg-navy-900 text-gray-200 font-sans">
 
@@ -49,8 +50,8 @@
         <li><a href="#pricing" class="text-gray-500 hover:text-blue-900">Pricing</a></li>
         <li><a href="#contact" class="text-gray-500 hover:text-blue-900">Contact</a></li>
         <li>
-          <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded glow transition duration-300 ease-in-out">
-            Sign Up
+          <button  class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded glow transition duration-300 ease-in-out">
+            <a href="/auth/register"> Sign Up</a>
           </button>
         </li>
       </ul>
@@ -128,12 +129,13 @@
               <!-- First Half -->
               <div class="w-full md:w-1/2 flex flex-row items-center gap-2">
                 <button
+                type="button"
                   id="gen-temp-room-id"
                   class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded glow"
                 >
                   Generate
                 </button>
-                <p id="room-id-placeholder"></p>
+                <p id="room-id-placeholder" class="text-blue-900"></p>
 
               </div>
             
@@ -256,14 +258,12 @@
         <p>&copy; 2024 CoText. All rights reserved.</p>
       </div>
     </footer>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <!-- <script src="https://cdn.socket.io/4.7.0/socket.io.min.js"></script> -->
+    <script type="module" src="./js/client.js"></script>
+   
   
-
-<script src="/socket.io/socket.io.js"></script>
-<script src="https://cdn.socket.io/4.7.0/socket.io.min.js"></script>
-<script type="module" src="./js/client.js"></script>
-<script type="module" src="./js/namespaces/default.js"></script>
-<script type="module" src="./js/namespaces/editor.js"></script>
-
   </body>
   </html>
   

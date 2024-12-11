@@ -1,8 +1,22 @@
 import { generateTempRoomId } from "../utils/generateTempRoomId.js";
-let totalUserOnline = 0;
-let sharedText = "";
+
 const setUpDefaultNamespace = (io) => {
-  io.on("connection", (socket) => {
+  let totalUserOnline = 0;
+  let sharedText = "";
+  console.log("setting up default namespace....");
+  const defaultNamespace = io.of("/");
+
+  defaultNamespace.on("connection", (socket) => {
+    console.log("client connected ", socket.id);
+
+    socket.on("connect", () => {
+      console.log("User connected via 'connect' event", socket.id);
+    });
+
+    socket.on("connect_error", (err) => {
+      console.log(err);
+    });
+
     // socket counter in a server
     totalUserOnline = io.engine.clientsCount;
     io.emit("client-count", totalUserOnline);
@@ -15,7 +29,7 @@ const setUpDefaultNamespace = (io) => {
 
     socket.on("join-temp-room", (tempRoomID) => {
       socket.join(tempRoomID);
-      io.to(tempRoomID).emit("load-current-text", sharedText);
+      defaultNamespace.to(tempRoomID).emit("load-current-text", sharedText);
     });
 
     socket.on("temp-text-change", (text, tempRoomID) => {

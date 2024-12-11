@@ -2,7 +2,7 @@ import User from "../models/user_model.js";
 // some error handlers
 
 const handleUserRegistration = async (req, res, next) => {
-  const { username, email, password } = req.query || req.body;
+  const { username, email, password } = req.body || req.query;
 
   if (!username || !email || !password) {
     console.log("input field cannot be empty");

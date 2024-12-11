@@ -8,13 +8,25 @@ const online = document.getElementById("online-user");
 const genDefaultRoom = document.getElementById("gen-temp-room-id");
 const defaultRoomId = document.getElementById("room-id-placeholder");
 
-const socket = io("http://127.0.0.1:1010");
+genDefaultRoom.addEventListener("click", (e) => {
+  e.preventDefault();
+  console.log("generate button clicked");
+});
+
+const socket = io("http://localhost:1010");
 
 let tempRoomID;
-const initializeDefaultNamespace = () => {
+export function initializeDefaultNamespace() {
+  console.log("function initialized..");
   socket.on("connect", () => {
     // to-do: show some message when client joins
     console.log("connected to the rtc server");
+
+    socket.on("connect_error", (err) => {
+      console.log(err.message);
+      console.log(err.description);
+      console.log(err.context);
+    });
 
     // counting the number of client;
     socket.on("client-count", (totalClients) => {
@@ -26,6 +38,7 @@ const initializeDefaultNamespace = () => {
 
     genDefaultRoom.addEventListener("click", (e) => {
       e.preventDefault();
+      console.log("generate button clicked");
       socket.emit("create-temp-room");
     });
 
@@ -60,6 +73,4 @@ const initializeDefaultNamespace = () => {
       textArea.value = sharedText;
     });
   });
-};
-
-export { initializeDefaultNamespace };
+}

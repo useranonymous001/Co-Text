@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
+import { generateToken } from "../utils/token.js";
 
 const userSchema = new mongoose.Schema(
   {
@@ -50,13 +51,12 @@ userSchema.statics.matchPasswordAndGenerateToken = async function (
   if (!user) {
     console.log("user not found");
   }
-  console.log(user);
   const match = await bcrypt.compare(password, user.password);
   if (!match) {
     console.log("password incorrect");
     return;
   }
-  const accessToken = generateToken(user._id, email);
+  const accessToken = await generateToken(user);
   return accessToken;
 };
 
