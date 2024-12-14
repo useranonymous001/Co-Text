@@ -3,7 +3,7 @@ const app = express();
 import path from "node:path";
 import cookieParser from "cookie-parser";
 import userRoutes from "./routes/user_route.js";
-// import editorRoutes from "./routes/editor_route.js";
+import editorRoutes from "./routes/editor_route.js";
 
 // importing middlewares
 import { checkAuthentication } from "./middlewares/auth.js";
@@ -20,15 +20,12 @@ app.set(
 );
 app.set("view engine", "ejs");
 
-const __dirname = path.join("B:", "Projects", "Real-Time-Text-Collaboration");
 // user router
 app.use("/auth", userRoutes);
-app.use(checkAuthentication);
-app.get("/editor", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "editor.html"));
-});
 
-// app.use("/api/v1", editorRoutes);
+app.use(checkAuthentication);
+
+app.use("/editor", editorRoutes);
 
 // error handler
 app.use((req, res, next) => {

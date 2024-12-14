@@ -55,3 +55,11 @@
 
 
 
+
+sending handshake to the server: 
+  if (!editorSocket) {
+    editorSocket = io("/editor", {
+      auth: {
+        query: token,
+      },
+    });

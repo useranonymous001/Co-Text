@@ -10,6 +10,7 @@ const checkAuthentication = async (req, res, next) => {
     const decoded = await validateToken(token);
     if (decoded) {
       req.user = decoded;
+
       return next();
     }
   } catch (error) {

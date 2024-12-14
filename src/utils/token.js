@@ -15,7 +15,7 @@ const generateToken = async (user) => {
     }
 
     const token = await new Promise((resolve, reject) => {
-      jwt.sign(payload, JWT_SECRET_KEY, { expiresIn: "20m" }, (err, token) => {
+      jwt.sign(payload, JWT_SECRET_KEY, { expiresIn: "1h" }, (err, token) => {
         if (err) {
           reject(err.message);
         }
@@ -28,9 +28,9 @@ const generateToken = async (user) => {
   }
 };
 
-const validateToken = async (token) => {
+const validateToken = (token) => {
   try {
-    const valid = await jwt.verify(token, `${process.env.JWT_SECRET_KEY}`);
+    const valid = jwt.verify(token, `${process.env.JWT_SECRET_KEY}`);
     return valid;
   } catch (error) {
     console.log("error in validation, ", error.message);

@@ -2,9 +2,8 @@
 // to-do: add authentication middleware for paid/aunthentic users
 // to-do: you can write and share the code later on but should be inside the room for sharing
 
-import { authenticateSocket } from "../middlewares/socketAuthMiddleware.js";
-
-// import { validateToken } from "../utils/token.js";
+import { validateToken } from "../utils/token.js";
+import { generateTempRoomId } from "../utils/generateTempRoomId.js";
 /**
  * Handles the text change event
  * @param {Object} socket the socket instance
@@ -15,21 +14,42 @@ import { authenticateSocket } from "../middlewares/socketAuthMiddleware.js";
  *
  */
 
-const setUpEditorSockethandlers = (io) => {
+export const setUpEditorSockethandlers = (io) => {
   const editorNamespace = io.of("/editor");
-
   // authenticating before connecting
-  editorNamespace.use(authenticateSocket);
+  editorNamespace.use((socket, next) => {
+    const token = socket.handshake.auth.query;
+
+    if (!token) {
+      return next(new Error("token not found, send me the  token"));
+    }
+    try {
+      const decoded = validateToken(token);
+      socket.user = decoded;
+      next();
+    } catch (error) {
+      return next(new Error("Authentication error: invalid token"));
+    }
+  });
 
   // socket connection
   editorNamespace.on("connection", (socket) => {
     // demo welcome message
-    console.log("user connected to editor namespace");
+    console.log("user connected to editor namespace ", socket.id);
 
-    socket.on("disconnect", () => {
-      console.log("editor socket disconnect");
+    socket.on("create-editor-room", () => {
+      const editorRoomId = generateTempRoomId();
+      socket.join(editorRoomId);
+      socket.emit("editor-room-created", editorRoomId);
+    });
+
+    socket.on("join-editor-room", (roomID) => {
+      socket.join(roomID);
+      socket.emit("editor-room-joined", "editor socket joined room");
+    });
+
+    socket.on("disconnect", (reason) => {
+      console.log("editor socket disconnected reason: ", reason);
     });
   });
 };
-
-export { setUpEditorSockethandlers };
