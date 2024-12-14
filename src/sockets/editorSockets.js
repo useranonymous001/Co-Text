@@ -1,9 +1,16 @@
 // to-do: optimize that only the person inside the room can share at the realtime
-// to-do: add authentication middleware for paid/aunthentic users
 // to-do: you can write and share the code later on but should be inside the room for sharing
 
 import { validateToken } from "../utils/token.js";
 import { generateTempRoomId } from "../utils/generateTempRoomId.js";
+
+import {
+  saveRoomID,
+  handleJoinRoom,
+  handleLeaveRoom,
+  deleteEmptyRooms,
+} from "../controllers/editorController.js";
+
 /**
  * Handles the text change event
  * @param {Object} socket the socket instance
@@ -14,9 +21,12 @@ import { generateTempRoomId } from "../utils/generateTempRoomId.js";
  *
  */
 
+let editorRoomId;
 export const setUpEditorSockethandlers = (io) => {
+  // new editor namespace for logged in users
   const editorNamespace = io.of("/editor");
-  // authenticating before connecting
+
+  // socket authentication
   editorNamespace.use((socket, next) => {
     const token = socket.handshake.auth.query;
 
@@ -32,24 +42,31 @@ export const setUpEditorSockethandlers = (io) => {
     }
   });
 
+  setInterval(() => {
+    console.log("deleting empty rooms....");
+    deleteEmptyRooms();
+  }, 60000);
+
   // socket connection
   editorNamespace.on("connection", (socket) => {
-    // demo welcome message
+    // just temp message, optimize it later
     console.log("user connected to editor namespace ", socket.id);
 
-    socket.on("create-editor-room", () => {
-      const editorRoomId = generateTempRoomId();
+    socket.on("create-editor-room", async () => {
+      editorRoomId = generateTempRoomId();
       socket.join(editorRoomId);
-      socket.emit("editor-room-created", editorRoomId);
+      // saving roomID in user's database
+      const newRoom = await saveRoomID(editorRoomId, socket);
+      socket.emit("editor-room-created", newRoom);
     });
 
     socket.on("join-editor-room", (roomID) => {
-      socket.join(roomID);
-      socket.emit("editor-room-joined", "editor socket joined room");
+      handleJoinRoom(socket, roomID);
     });
 
-    socket.on("disconnect", (reason) => {
-      console.log("editor socket disconnected reason: ", reason);
+    socket.on("disconnect", () => {
+      console.log("pulling disconnected socket");
+      handleLeaveRoom(socket, editorRoomId);
     });
   });
 };

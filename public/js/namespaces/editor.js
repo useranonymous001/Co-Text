@@ -1,3 +1,4 @@
+// function to get the cookies from the browser
 function getCookie(name) {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
@@ -5,8 +6,7 @@ function getCookie(name) {
   return "";
 }
 
-// elements from the editor.html
-
+// getting elements from the editor.html
 const genRoom = document.getElementById("gen-room-id");
 const roomIdHolder = document.getElementById("room-id-generated");
 const joinRoom = document.getElementById("join-room");
@@ -33,8 +33,8 @@ export function initializeEditorNamespace() {
       editorSocket.emit("create-editor-room");
     });
 
-    editorSocket.on("editor-room-created", (roomID) => {
-      editorRoomId = roomID;
+    editorSocket.on("editor-room-created", (room) => {
+      editorRoomId = room.roomID;
       roomIdHolder.innerText = `${editorRoomId}`;
     });
 
@@ -46,16 +46,13 @@ export function initializeEditorNamespace() {
       editorSocket.emit("join-editor-room", editorRoomId);
     });
 
-    editorSocket.on("editor-room-joined", (data) => {
-      console.log(data);
+    editorSocket.on("editor-room-joined", (joinedRoom) => {
+      console.log("User Joined: ", joinedRoom);
     });
 
+    // error handlers
     editorSocket.on("connect_error", (err) => {
       console.log(err);
-    });
-
-    editorSocket.on("disconnect", () => {
-      console.log("editor socket disconnected");
     });
   }
 }

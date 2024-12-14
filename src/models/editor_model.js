@@ -1,13 +1,14 @@
 import mongoose, { Mongoose } from "mongoose";
+import { type } from "os";
 
 // randomUsername, roomID, content, title, versionHistory(snapshot), status, ownerID, activeUsers, lastUpdated, permissions, isPublic, documentType
 
 const editorSchema = new mongoose.Schema(
   {
-    roomID: {
-      type: String,
+    userID: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
       required: true,
-      unique: true,
     },
     title: {
       type: String,
@@ -17,20 +18,7 @@ const editorSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
-    ownerID: {
-      // user who created the room
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
 
-    activeUsers: [
-      // total number of users in a room
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-      },
-    ],
     lastUpdated: {
       type: Date,
       default: Date.now,
@@ -44,21 +32,6 @@ const editorSchema = new mongoose.Schema(
       },
     ],
 
-    permissions: [
-      {
-        userID: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-        role: {
-          type: String,
-          enum: ["admin", "editor", "viewer"],
-          default: "editor",
-        },
-      },
-    ],
-
-    isPublic: {
-      type: Boolean,
-      default: false,
-    },
     documentType: {
       type: String,
       enum: ["text", "markdown", "code"],
