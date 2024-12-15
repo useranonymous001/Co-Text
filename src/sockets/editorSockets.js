@@ -3,6 +3,10 @@
 
 import { validateToken } from "../utils/token.js";
 import { generateTempRoomId } from "../utils/generateTempRoomId.js";
+import {
+  countTotalRoomUsers,
+  handleTextChange,
+} from "../controllers/editorController.js";
 
 import {
   saveRoomID,
@@ -10,6 +14,7 @@ import {
   handleLeaveRoom,
   deleteEmptyRooms,
 } from "../controllers/editorController.js";
+import { getIO } from "../../server.js";
 
 /**
  * Handles the text change event
@@ -60,8 +65,22 @@ export const setUpEditorSockethandlers = (io) => {
       socket.emit("editor-room-created", newRoom);
     });
 
-    socket.on("join-editor-room", (roomID) => {
-      handleJoinRoom(socket, roomID);
+    socket.on("join-editor-room", (roomIdToJoin) => {
+      handleJoinRoom(socket, roomIdToJoin);
+    });
+
+    // count total users
+    let totalUsersOnline = io.of("/editor").sockets.size;
+    io.of("/editor").emit("count-total-users", totalUsersOnline);
+    socket.on("count-room-users", async (editorRoomId) => {
+      const usersInsideRoom = await countTotalRoomUsers(editorRoomId);
+      io.of("/editor").emit("room-user-counted", usersInsideRoom);
+    });
+
+    // real time text change events
+    socket.on("editor-text-change", (content, editorRoomId) => {
+      const io = getIO();
+      handleTextChange(io, socket, content, editorRoomId);
     });
 
     socket.on("disconnect", () => {

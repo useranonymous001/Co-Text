@@ -20,12 +20,10 @@ const roomSchema = new mongoose.Schema(
       default: false,
     },
 
-    activeUsers: [
-      {
-        type: [String],
-        default: [],
-      },
-    ],
+    activeUsers: {
+      type: [String],
+      default: [],
+    },
 
     permissions: [
       {

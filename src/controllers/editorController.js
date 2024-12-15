@@ -1,11 +1,11 @@
 // to-do: store the snaps of the text in the database
 import { fetchSocketsFromRoom } from "../utils/fetchSocketsFromRoom.js";
-import Editor from "../models/editor_model.js";
 import Room from "../models/room_model.js";
 import { getIO } from "../../server.js";
 import { setUpEditorSockethandlers } from "../sockets/editorSockets.js";
 import path from "path";
 import User from "../models/user_model.js";
+import { saveDataToDatabase } from "../utils/saveContentToDatabase.js";
 
 const __dirname = path.join("B:", "Projects", "Real-Time-Text-Collaboration");
 
@@ -30,11 +30,18 @@ export async function saveRoomID(roomID, socket) {
       socket.disconnect();
     }
 
-    const newRoom = await Room.create({
+    const newRoom = await new Room({
       roomID,
       ownerID: user._id,
-      activeUsers: [socket.id],
     });
+
+    newRoom.activeUsers = newRoom.activeUsers.flat();
+    console.log(newRoom.activeUsers);
+
+    if (!newRoom.activeUsers.includes(socket.id)) {
+      newRoom.activeUsers.push(socket.id);
+    }
+    await newRoom.save();
     return newRoom;
   } catch (error) {
     console.error("Error in saveRoomID: ", error.message);
@@ -42,18 +49,18 @@ export async function saveRoomID(roomID, socket) {
   }
 }
 
-export const handleJoinRoom = async (socket, roomID) => {
+export const handleJoinRoom = async (socket, roomIdToJoin) => {
   try {
-    socket.join(roomID);
+    socket.join(roomIdToJoin);
     const joinedRoom = await Room.findOneAndUpdate(
-      { roomID: roomID },
+      { roomID: roomIdToJoin },
       {
         $addToSet: { activeUsers: socket.id },
       },
       { new: true }
     );
-    console.log(`${socket.id} joined ${roomID}`);
-    socket.emit("editor-room-joined", joinedRoom);
+    const io = getIO();
+    io.of("/editor").emit("editor-room-joined", joinedRoom);
   } catch (error) {
     throw new Error("error occured when joining the room: ", error.message);
   }
@@ -76,18 +83,24 @@ export const handleLeaveRoom = async (socket, roomID) => {
 export const deleteEmptyRooms = async () => {
   const rooms = await Room.find();
 
-  // for (const room of rooms) {
-  //   const activeUsersLen = room.activeUsers.length;
-  //   if (activeUsersLen === 0) {
-  //     await Room.findOneAndDelete({ _id: room._id });
-  //     console.log(`Deleted empty room with ID: ${room._id}`);
-  //   }
-  // }
-
   const deletePromises = rooms
-    .filter((room) => room.activeUsers.length === 0)
-    .map((room) => findOneAndDelete({ _id: room._id }));
+    .filter(
+      (room) => Array.isArray(room.activeUsers) && room.activeUsers.length === 0
+    )
+    .map((room) => Room.findOneAndDelete({ _id: room._id }));
 
   await Promise.all(deletePromises);
-  console.log("all empty rooms are deleted");
+};
+
+export const countTotalRoomUsers = async (editorRoomId) => {
+  const io = getIO();
+  const totalRoomUsers = await fetchSocketsFromRoom(io, editorRoomId);
+
+  return totalRoomUsers;
+};
+
+// main text-change events controller
+export const handleTextChange = async (io, socket, content, editorRoomId) => {
+  io.of("/editor").to(editorRoomId).emit("update-editor-text", content);
+  saveDataToDatabase(socket, content);
 };

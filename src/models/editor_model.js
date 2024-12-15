@@ -1,5 +1,4 @@
-import mongoose, { Mongoose } from "mongoose";
-import { type } from "os";
+import mongoose from "mongoose";
 
 // randomUsername, roomID, content, title, versionHistory(snapshot), status, ownerID, activeUsers, lastUpdated, permissions, isPublic, documentType
 
@@ -9,6 +8,7 @@ const editorSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
+      unique: true,
     },
     title: {
       type: String,
