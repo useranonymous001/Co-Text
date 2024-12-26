@@ -1,18 +1,24 @@
 import express from "express";
 const app = express();
 import path from "node:path";
+
+// import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import userRoutes from "./routes/user_route.js";
 import editorRoutes from "./routes/editor_route.js";
+import fileUpload from "express-fileupload";
 
 // importing middlewares
 import { checkAuthentication } from "./middlewares/auth.js";
 
 // middlewares
+
+// app.use(helmet());
 app.use(express.static("public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(fileUpload());
 
 app.set(
   "views",

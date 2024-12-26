@@ -19,9 +19,11 @@ const roomNameHoder = document.getElementById("room-name");
 
 // text-area
 const textarea = document.getElementById("editor");
+const fileName = document.getElementById("file-name");
 
 let editorSocket = null;
 let editorRoomId;
+
 export function initializeEditorNamespace() {
   const token = getCookie("accessToken");
 
@@ -58,7 +60,6 @@ export function initializeEditorNamespace() {
     });
 
     editorSocket.on("editor-room-joined", (joinedRoom) => {
-      console.log("Joined room Object: ", joinedRoom);
       roomNameHoder.innerText = `${joinedRoom.roomID}`;
       editorSocket.emit("count-room-users", editorRoomId);
     });
@@ -84,6 +85,15 @@ export function initializeEditorNamespace() {
 
     editorSocket.on("update-editor-text", (content) => {
       textarea.value = content;
+    });
+
+    fileName.addEventListener("click", (e) => {
+      e.preventDefault();
+      editorSocket.emit("get-file");
+    });
+
+    editorSocket.on("got-file-data", (fileData) => {
+      textarea.value = fileData;
     });
 
     // error handlers

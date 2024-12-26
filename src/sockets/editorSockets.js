@@ -13,6 +13,7 @@ import {
   handleJoinRoom,
   handleLeaveRoom,
   deleteEmptyRooms,
+  handleGetFileContent,
 } from "../controllers/editorController.js";
 import { getIO } from "../../server.js";
 
@@ -81,6 +82,12 @@ export const setUpEditorSockethandlers = (io) => {
     socket.on("editor-text-change", (content, editorRoomId) => {
       const io = getIO();
       handleTextChange(io, socket, content, editorRoomId);
+    });
+
+    socket.on("get-file", async () => {
+      const fileData = await handleGetFileContent(socket);
+      const io = getIO();
+      io.of("/editor").emit("got-file-data", fileData);
     });
 
     socket.on("disconnect", () => {

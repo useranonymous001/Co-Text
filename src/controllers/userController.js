@@ -22,10 +22,12 @@ const handleUserRegistration = async (req, res, next) => {
       password,
     });
 
-    return res.status(200).json({
-      message: "user created successfully",
-      user,
-    });
+    // *** api ***
+    // return res.status(200).json({
+    //   message: "user created successfully",
+    //   user,
+    // });
+    return res.redirect("/auth/login");
   } catch (error) {
     console.log(error.message);
   }
@@ -51,9 +53,12 @@ const handleUserLogin = async (req, res, next) => {
 
     res.cookie("accessToken", accessToken); // add more options later httpOnly: true and secure : true
 
-    return res
-      .status(200)
-      .json({ message: "user logged in successfull", accessToken, user });
+    // *** api ***
+    // return res
+    //   .status(200)
+    //   .json({ message: "user logged in successfull", accessToken, user });
+
+    return res.redirect("/editor");
   } catch (error) {
     console.log(error.message);
   }
@@ -61,9 +66,12 @@ const handleUserLogin = async (req, res, next) => {
 
 const handleUserLogout = async (req, res, next) => {
   await res.clearCookie("accessToken");
-  return res.status(200).json({
-    message: "logged out",
-  });
+  // *** api ***
+  // return res.status(200).json({
+  //   message: "logged out",
+  // });
+
+  return res.redirect("/");
 };
 
 export { handleUserRegistration, handleUserLogin, handleUserLogout };

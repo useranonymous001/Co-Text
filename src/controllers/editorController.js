@@ -6,6 +6,7 @@ import { setUpEditorSockethandlers } from "../sockets/editorSockets.js";
 import path from "path";
 import User from "../models/user_model.js";
 import { saveDataToDatabase } from "../utils/saveContentToDatabase.js";
+import Editor from "../models/editor_model.js";
 
 const __dirname = path.join("B:", "Projects", "Real-Time-Text-Collaboration");
 
@@ -103,4 +104,50 @@ export const countTotalRoomUsers = async (editorRoomId) => {
 export const handleTextChange = async (io, socket, content, editorRoomId) => {
   io.of("/editor").to(editorRoomId).emit("update-editor-text", content);
   saveDataToDatabase(socket, content);
+};
+
+export const handleUploadFile = async (req, res, next) => {
+  try {
+    if (!req.files || !req.files.textFile) {
+      return res.status(400).json({ message: "No file uploaded" });
+    }
+
+    const file = req.files.textFile;
+    if (file.mimetype !== "text/plain") {
+      return res.status(400).json({ message: "only .txt are allowed" });
+    }
+
+    const content = file.data.toString("utf-8");
+
+    await Editor.findOneAndUpdate(
+      { userID: req.user.id },
+      { $set: { content } },
+      { new: true, upsert: true }
+    );
+
+    const fileData = {
+      name: file.name,
+      content: content,
+    };
+    req.fileData = fileData;
+
+    // api
+    // return res.status(200).json({
+    //   message: "File uploaded and content saved successfully.",
+    //   fileData: fileData,
+    // });
+
+    return res.status(200);
+  } catch (error) {
+    throw new Error("error uploading file: ", error);
+  }
+};
+
+export const handleGetFileContent = async (socket) => {
+  try {
+    const editor = await Editor.findOne({ userID: socket.user.id });
+    return editor.content;
+  } catch (error) {
+    throw new Error("Some error occured ", error);
+  }
 };

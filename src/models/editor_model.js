@@ -9,6 +9,7 @@ const editorSchema = new mongoose.Schema(
       ref: "User",
       required: true,
       unique: true,
+      sparse: true,
     },
     title: {
       type: String,

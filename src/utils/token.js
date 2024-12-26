@@ -15,7 +15,7 @@ const generateToken = async (user) => {
     }
 
     const token = await new Promise((resolve, reject) => {
-      jwt.sign(payload, JWT_SECRET_KEY, { expiresIn: "1h" }, (err, token) => {
+      jwt.sign(payload, JWT_SECRET_KEY, { expiresIn: "3d" }, (err, token) => {
         if (err) {
           reject(err.message);
         }
