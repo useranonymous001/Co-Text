@@ -4,11 +4,14 @@ import Room from "../models/room_model.js";
 import { getIO } from "../../server.js";
 import { setUpEditorSockethandlers } from "../sockets/editorSockets.js";
 import path from "path";
+import { fileURLToPath } from "url";
 import User from "../models/user_model.js";
 import { saveDataToDatabase } from "../utils/saveContentToDatabase.js";
 import Editor from "../models/editor_model.js";
 
-const __dirname = path.join("B:", "Projects", "Real-Time-Text-Collaboration");
+// const __dirname = path.join("B:", "Projects", "Real-Time-Text-Collaboration");
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 let isEditorInitialized = false;
 
@@ -20,7 +23,7 @@ export const editorRouteHandler = (req, res, next) => {
     // to-do: to remove the client from the server if he is loggedOut
     isEditorInitialized = true;
   }
-  res.sendFile(path.join(__dirname, "public", "editor.html"));
+  res.sendFile(path.join(__dirname, "..", "..", "public", "editor.html"));
 };
 
 export async function saveRoomID(roomID, socket) {

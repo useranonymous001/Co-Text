@@ -1,0 +1,18 @@
+version: '3.8'
+services:
+  app:
+    container_name: real_time_text_sharing
+    restart: always
+    build: .
+    ports:
+      - "1010:1010"
+    external_links:
+      - mongo
+
+  database:
+    container_name: mongo
+    image: mongo
+    volumes:
+      - ./data:/data/db
+    ports:
+      - "27017:27017"

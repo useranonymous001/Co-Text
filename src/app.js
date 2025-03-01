@@ -1,6 +1,7 @@
 import express from "express";
 const app = express();
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 // import helmet from "helmet";
 import cookieParser from "cookie-parser";
@@ -20,10 +21,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(fileUpload());
 
-app.set(
-  "views",
-  path.join("B:", "Projects", "Real-Time-Text-Collaboration", "src", "views")
-);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// app.set(
+//   "views",
+//   path.join("B:", "Projects", "Real-Time-Text-Collaboration", "src", "views")
+// );
+app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
 // user router
