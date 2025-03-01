@@ -31,7 +31,7 @@ export async function saveRoomID(roomID, socket) {
       socket.disconnect();
     }
 
-    const newRoom = await new Room({
+    const newRoom = new Room({
       roomID,
       ownerID: user._id,
     });

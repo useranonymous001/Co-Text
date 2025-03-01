@@ -7,7 +7,10 @@ const online = document.getElementById("online-user");
 const genDefaultRoom = document.getElementById("gen-temp-room-id");
 const defaultRoomId = document.getElementById("room-id-placeholder");
 
-const socket = io("http://localhost:1010");
+const socket = io("http://localhost:1010", {
+  transports: ["websocket"],
+  withCredentials: true,
+});
 
 let tempRoomID;
 export function initializeDefaultNamespace() {

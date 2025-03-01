@@ -43,7 +43,8 @@ const handleUserLogin = async (req, res, next) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      console.log("user not found: userController.js");
+      // console.log("user not found: userController.js");
+      res.redirect("/auth/login");
     }
 
     const accessToken = await User.matchPasswordAndGenerateToken(

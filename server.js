@@ -10,10 +10,11 @@ connectDB();
 
 const io = new Server(server, {
   cors: {
-    origin: `*`,
+    origin: ` https://d594-2400-9700-113-48ef-c800-9745-eb14-7f39.ngrok-free.app`,
     methods: ["GET", "POST"],
+    credentials: true,
   },
-  transports: ["websocket", "polling"],
+  transports: ["websocket"],
 });
 
 import { setUpDefaultNamespace } from "./src/sockets/defaultSocket.js";
